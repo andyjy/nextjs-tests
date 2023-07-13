@@ -120,9 +120,10 @@ const fn = async () => {
 };
 
 const wrapWithThenable = async (fn: () => Promise<string>) => {
+  const fnWithContext = AsyncLocalStorage.bind(fn);
   return {
     then: async (resolve: (value: string) => void) => {
-      resolve(await fn());
+      resolve(await fnWithContext());
     },
   };
 };
