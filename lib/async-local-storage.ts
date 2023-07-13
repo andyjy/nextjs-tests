@@ -73,3 +73,27 @@ export async function testAsyncResource() {
     };
   });
 }
+
+const functionWithThenable = async () => {
+  return {
+    then: (resolve: (value: string) => void) => {
+      resolve(store.getStore() ?? "<undefined>");
+    },
+  };
+};
+
+const wrapFunctionWithThenable = async () => {
+  return new Promise(async (resolve: (value: string) => void) => {
+    resolve(
+      `wrapper: ${store.getStore()}, functioWithThenable: ${await functionWithThenable()}`
+    );
+  });
+};
+
+export async function testFnWithThenable() {
+  return await store.run("function with thenable works", functionWithThenable);
+}
+
+export async function testWrappedFnWithThenable() {
+  return await store.run("sure does!", wrapFunctionWithThenable);
+}
