@@ -4,6 +4,8 @@ import {
   testStore,
   testPromise,
   testThenable,
+  testThenableNoAsync,
+  testAsyncResource,
 } from "../../lib/async-local-storage";
 
 export const config = {
@@ -18,6 +20,8 @@ export default async function handler(req: NextRequest) {
       store: await testStore(),
       promise: await testPromise(),
       thenable: await testThenable(),
+      thenable_no_async: await testThenableNoAsync(),
+      async_resource: await testAsyncResource(),
     }),
     {
       status: 200,

@@ -4,10 +4,12 @@ import {
   testStore,
   testPromise,
   testThenable,
+  testThenableNoAsync,
+  testAsyncResource,
 } from "../../lib/async-local-storage";
 
 export default async function handler(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse
 ) {
   res.status(200).json({
@@ -16,5 +18,7 @@ export default async function handler(
     store: await testStore(),
     promise: await testPromise(),
     thenable: await testThenable(),
+    thenable_no_async: await testThenableNoAsync(),
+    async_resource: await testAsyncResource(),
   });
 }
