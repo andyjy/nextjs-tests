@@ -85,7 +85,17 @@ const functionWithThenable = async () => {
 const wrapFunctionWithThenable = async () => {
   return new Promise(async (resolve: (value: string) => void) => {
     resolve(
-      `wrapper: ${store.getStore()}, functioWithThenable: ${await functionWithThenable()}`
+      `wrapper: ${store.getStore()}, functionWithThenable: ${await functionWithThenable()}`
+    );
+  });
+};
+
+const wrapFunctionWithThenableAndBind = async () => {
+  return new Promise(async (resolve: (value: string) => void) => {
+    resolve(
+      `wrapper: ${store.getStore()}, functionWithThenable_bind: ${await AsyncLocalStorage.bind(
+        functionWithThenable
+      )()}`
     );
   });
 };
@@ -96,4 +106,24 @@ export async function testFnWithThenable() {
 
 export async function testWrappedFnWithThenable() {
   return await store.run("sure does!", wrapFunctionWithThenable);
+}
+
+export async function testWrappedFnWithThenableAndBind() {
+  return `with bind: ${await store.run(
+    "sure does!",
+    wrapFunctionWithThenableAndBind
+  )}`;
+}
+
+export async function tests() {
+  return {
+    store: await testStore(),
+    promise: await testPromise(),
+    thenable: await testThenable(),
+    thenable_no_async: await testThenableNoAsync(),
+    async_resource: await testAsyncResource(),
+    fn_with_thenable: await testFnWithThenable(),
+    wrapped_fn_with_thenable: await testWrappedFnWithThenable(),
+    wrapped_fn_with_thenable_and_bind: await testWrappedFnWithThenableAndBind(),
+  };
 }

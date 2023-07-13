@@ -1,14 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import {
-  testStore,
-  testPromise,
-  testThenable,
-  testThenableNoAsync,
-  testAsyncResource,
-  testFnWithThenable,
-  testWrappedFnWithThenable,
-} from "../../lib/async-local-storage";
+import { tests } from "../../lib/async-local-storage";
 
 export default async function handler(
   _req: NextApiRequest,
@@ -21,13 +13,7 @@ export default async function handler(
       {
         status: "ok",
         runtime: "node",
-        store: await testStore(),
-        promise: await testPromise(),
-        thenable: await testThenable(),
-        thenable_no_async: await testThenableNoAsync(),
-        async_resource: await testAsyncResource(),
-        fn_with_thenable: await testFnWithThenable(),
-        wrapped_fn_with_thenable: await testWrappedFnWithThenable(),
+        ...(await tests()),
       },
       undefined,
       2
