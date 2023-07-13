@@ -120,10 +120,18 @@ const fn = async () => {
 };
 
 const wrapWithThenable = async (fn: () => Promise<string>) => {
-  const fnWithContext = AsyncLocalStorage.bind(fn);
   return {
     then: async (resolve: (value: string) => void) => {
-      resolve(await fnWithContext());
+      resolve(await fn());
+    },
+  };
+};
+
+const wrapWithThenableAndBindContext = async (fn: () => Promise<string>) => {
+  const fnWithAsyncContext = AsyncLocalStorage.bind(fn);
+  return {
+    then: async (resolve: (value: string) => void) => {
+      resolve(await fnWithAsyncContext());
     },
   };
 };
@@ -134,9 +142,15 @@ const testWrapWithThenable = async () => {
   );
 };
 
-const testWrapWithThenableAndBind = async () => {
+const testBindAndWrapWithThenable = async () => {
   return await store.run("wrapWithThenable and bind() works!", async () =>
     wrapWithThenable(AsyncLocalStorage.bind(fn))
+  );
+};
+
+const testWrapWithThenableAndBindContext = async () => {
+  return await store.run("wrapWithThenableAndBindContext works!", async () =>
+    wrapWithThenableAndBindContext(fn)
   );
 };
 
@@ -151,6 +165,8 @@ export async function tests() {
     wrapped_fn_with_thenable: await testWrappedFnWithThenable(),
     wrapped_fn_with_thenable_and_bind: await testWrappedFnWithThenableAndBind(),
     wrap_with_thenable: await testWrapWithThenable(),
-    wrap_with_thenable_and_bind: await testWrapWithThenableAndBind(),
+    bind_and_wrap_with_thenable: await testBindAndWrapWithThenable(),
+    wrap_with_thenable_and_bind_context:
+      await testWrapWithThenableAndBindContext(),
   };
 }
