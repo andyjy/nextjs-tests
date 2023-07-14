@@ -10,6 +10,7 @@ export default async function handler(req: NextRequest) {
       {
         status: "ok",
         runtime: "edge",
+        detect_cloudflare: globalThis.navigator?.userAgent ?? "<undefined>",
       },
       undefined,
       2
